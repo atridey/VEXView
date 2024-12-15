@@ -61,7 +61,6 @@ class State(rx.State):
             if aCompetition['id'] == self.eventID:
                 competition = aCompetition
         self.matches = RECData.getMatches(competition, self.teamNum)
-        print(self.matches)
 
 def create_nav_link(text):
     """Create a navigation link with hover effect."""
@@ -114,7 +113,6 @@ def create_gray_text(text):
 
 
 def create_view_schedule_button(value: rx.Var[int]) -> rx.Component:
-    print('inbutton', value)
     """Create a 'View Schedule' button with specific styling and hover effect."""
     return rx.el.button(
         "View Schedule",
