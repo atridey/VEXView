@@ -1,6 +1,5 @@
 """Welcome to Reflex! This file outlines the steps to create a basic app."""
 
-
 import reflex as rx
 from . import RECData
 from rxconfig import config
@@ -30,13 +29,13 @@ class State(rx.State):
         while True:
             async with self:
                 self.currentTime = datetime.now(timeZone).strftime("%H:%M:%S")
-                print(self.currentTime) #Why I need this to make it work I have no clue
             await asyncio.sleep(0.1)
 
     def updateTeamNum(self, num):
         self.teamNum = num
 
-    def updateEvent(self, id):
+    @rx.event
+    def updateEvent(self, id: int):
         self.eventID = id
         
         competition: dict = {}
@@ -44,7 +43,6 @@ class State(rx.State):
             if aCompetition['id'] == self.eventID:
                 competition = aCompetition
         self.eventTimestamp = competition['startTimestamp']
-        print(self.eventTimestamp) #Apparently this is necessary too???!?!?!?!?!?
         self.updateMatchList()
         
     def setTeamInfo(self):
@@ -63,6 +61,7 @@ class State(rx.State):
             if aCompetition['id'] == self.eventID:
                 competition = aCompetition
         self.matches = RECData.getMatches(competition, self.teamNum)
+        print(self.matches)
 
 def create_nav_link(text):
     """Create a navigation link with hover effect."""
@@ -114,7 +113,7 @@ def create_gray_text(text):
     return rx.text(text, color="#9CA3AF")
 
 
-def create_view_schedule_button(value):
+def create_view_schedule_button(value: rx.Var[int]) -> rx.Component:
     print('inbutton', value)
     """Create a 'View Schedule' button with specific styling and hover effect."""
     return rx.el.button(
@@ -132,20 +131,19 @@ def create_view_schedule_button(value):
         transition_property=
         "background-color, border-color, color, fill, stroke, opacity, box-shadow, transform",
         transition_timing_function="cubic-bezier(0.4, 0, 0.2, 1)",
-        value=value,
+        #value=value,
         on_click=State.updateEvent(value),
     )
 
 
-def create_competition_card(competition):
-    print('incard', competition['id'])
-    print('incard', competition['name'])
+def create_competition_card(competition: rx.Var[dict]) -> rx.Component:
     """Create a competition information card with title, date, location, and a view schedule button."""
     return rx.box(
         create_subsection_heading(text=competition['name']),
         create_gray_text(text=competition['date']),
         create_gray_text(text=competition['location']),
-        create_view_schedule_button(58047),#value=rx.Var.create(competition['id'])),
+        create_view_schedule_button(competition['id']),#58047),#value=rx.Var.create(competition['id'])),
+        #58047
         background_color="#1F2937",
         padding="1rem",
         border_radius="0.375rem",
@@ -172,6 +170,7 @@ def create_match_row(match):
         create_table_cell(content=match['field']),
         create_table_cell(content=match['redAlliance']),
         create_table_cell(content=match['blueAlliance']),
+        on_mount=State.updateTime,
     )
 
 
@@ -294,7 +293,6 @@ def create_match_schedule_table():
                 create_table_header_cell(text="Red Alliance"),
                 create_table_header_cell(text="Blue Alliance"),
                 background_color="#374151",
-                on_mount=State.updateTime,
             )),
         rx.table.body(
             rx.foreach(State.matches, create_match_row),
