@@ -30,7 +30,7 @@ class State(rx.State):
         while True:
             async with self:
                 self.currentTime = datetime.now(timeZone).strftime("%H:%M:%S")
-                print(self.currentTime)
+                print(self.currentTime) #Why I need this to make it work I have no clue
             await asyncio.sleep(0.1)
 
     def updateTeamNum(self, num):
@@ -44,7 +44,7 @@ class State(rx.State):
             if aCompetition['id'] == self.eventID:
                 competition = aCompetition
         self.eventTimestamp = competition['startTimestamp']
-        
+        print(self.eventTimestamp) #Apparently this is necessary too???!?!?!?!?!?
         self.updateMatchList()
         
     def setTeamInfo(self):
@@ -145,7 +145,7 @@ def create_competition_card(competition):
         create_subsection_heading(text=competition['name']),
         create_gray_text(text=competition['date']),
         create_gray_text(text=competition['location']),
-        create_view_schedule_button(value=rx.Var.create(competition['id'])),
+        create_view_schedule_button(58047),#value=rx.Var.create(competition['id'])),
         background_color="#1F2937",
         padding="1rem",
         border_radius="0.375rem",
