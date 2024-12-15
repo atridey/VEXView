@@ -1,9 +1,7 @@
 import requests
 from os import environ
-from dotenv import load_dotenv
 from datetime import datetime
 
-load_dotenv('.env')
 KEY = environ['RECAPI']
 auth_header = {'Authorization' : 'Bearer ' + KEY}
 
