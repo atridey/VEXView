@@ -57,9 +57,3 @@ def getMatches(event, teamNum):
                         usefulMatch = { 'name' : match['name'], 'scheduled' : match['scheduled'][11:16],  'field' : match['field'], 'blueAlliance' : blueAlliance, 'redAlliance' : redAlliance}
                         applicableMatches.append(usefulMatch) 
     return applicableMatches
-
-teamNum = '5501B' #input('Team Number: ').upper()
-info = teamInfo(teamNum) #5501B is 85868
-eventList = recentEvents(info['id'])
-
-matches = getMatches(eventList[1], teamNum)

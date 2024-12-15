@@ -1,5 +1,3 @@
-"""Welcome to Reflex! This file outlines the steps to create a basic app."""
-
 import reflex as rx
 from . import RECData
 from rxconfig import config
@@ -8,7 +6,6 @@ from typing import List
 import asyncio
 
 class State(rx.State):
-    """The app state."""
     teamNum = ""
     teamID = 0
     teamName = ""
@@ -62,10 +59,11 @@ class State(rx.State):
                 competition = aCompetition
         self.matches = RECData.getMatches(competition, self.teamNum)
 
+
+#A bunch of leftover template functions - kept for future functionality expansion
 def create_nav_link(text):
     """Create a navigation link with hover effect."""
     return rx.el.a(text, href="#", _hover={"color": "#D1D5DB"})
-
 
 def create_nav_item(text):
     """Create a navigation item containing a link."""
@@ -83,19 +81,14 @@ def create_section_heading(text):
         as_="h2",
     )
 
-
 def create_bold_text(text):
-    """Create bold text."""
     return rx.text(text, font_weight="700")
-
-
+    
 def create_normal_text(text):
-    """Create normal text."""
     return rx.text(text)
 
 
 def create_labeled_info(label, value):
-    """Create a labeled information box with bold label and normal value."""
     return rx.box(
         create_bold_text(text=label),
         create_normal_text(text=value),
@@ -103,17 +96,14 @@ def create_labeled_info(label, value):
 
 
 def create_subsection_heading(text):
-    """Create a subsection heading with specific styling."""
     return rx.heading(text, font_weight="700", as_="h3", size="4")
 
 
 def create_gray_text(text):
-    """Create gray-colored text."""
     return rx.text(text, color="#9CA3AF")
 
 
 def create_view_schedule_button(value: rx.Var[int]) -> rx.Component:
-    """Create a 'View Schedule' button with specific styling and hover effect."""
     return rx.el.button(
         "View Schedule",
         background_color="#2563EB",
@@ -129,51 +119,40 @@ def create_view_schedule_button(value: rx.Var[int]) -> rx.Component:
         transition_property=
         "background-color, border-color, color, fill, stroke, opacity, box-shadow, transform",
         transition_timing_function="cubic-bezier(0.4, 0, 0.2, 1)",
-        #value=value,
         on_click=State.updateEvent(value),
     )
 
-
 def create_competition_card(competition: rx.Var[dict]) -> rx.Component:
-    """Create a competition information card with title, date, location, and a view schedule button."""
     return rx.box(
         create_subsection_heading(text=competition['name']),
         create_gray_text(text=competition['date']),
         create_gray_text(text=competition['location']),
-        create_view_schedule_button(competition['id']),#58047),#value=rx.Var.create(competition['id'])),
-        #58047
+        create_view_schedule_button(competition['id']), #For testing purposes: Chittenango is 58047
         background_color="#1F2937",
         padding="1rem",
         border_radius="0.375rem",
     )
 
-
 def create_table_header_cell(text):
-    """Create a table header cell with specific styling."""
     return rx.table.column_header_cell(text,
                                        padding="0.5rem",
                                        text_align="left")
 
-
 def create_table_cell(content):
-    """Create a table cell with specific styling."""
     return rx.table.cell(content, padding="0.5rem")
 
-
 def create_match_row(match):
-    """Create a table row for a match with match number, time, field (hardcoded as 'A'), and alliance information."""
     return rx.table.row(
         create_table_cell(content=match['name']),
         create_table_cell(content=match['scheduled']),
         create_table_cell(content=match['field']),
         create_table_cell(content=match['redAlliance']),
         create_table_cell(content=match['blueAlliance']),
-        on_mount=State.updateTime,
+        on_mount=State.updateTime, #This requires reload in current form, may try a different event handler. 
     )
 
 
 def create_header():
-    """Create the page header with title and navigation links."""
     return rx.flex(
         rx.heading(
             "VEXViewer",
@@ -216,7 +195,6 @@ def create_header():
 
 
 def create_search_button():
-    """Create a search button with specific styling and hover effect."""
     return rx.el.button(
         "Search",
         background_color="#2563EB",
@@ -235,12 +213,10 @@ def create_search_button():
         on_click=State.setTeamInfo,
     )
 
-
 def create_search_bar():
-    """Create a search bar with input field and search button."""
     return rx.flex(
         rx.el.input(
-            placeholder="Team Number (incl. letter)",
+            placeholder="Team Number (incl. letter)", #Need user feedback to determine most clear message
             type="text",
             background_color="#374151",
             _focus={
@@ -261,7 +237,6 @@ def create_search_bar():
 
 
 def create_team_info_section():
-    """Create a section displaying team information."""
     return rx.box(
         create_section_heading(text="Team Information"),
         rx.box(
@@ -281,7 +256,6 @@ def create_team_info_section():
 
 
 def create_match_schedule_table():
-    """Create a table displaying the match schedule."""
     return rx.table.root(
         rx.table.header(
             rx.table.row(
@@ -302,7 +276,6 @@ def create_match_schedule_table():
 
 
 def create_main_content():
-    """Create the main content of the page including team search, team info, upcoming competitions, and match schedule."""
     return rx.box(
         rx.box(
             create_section_heading(text="Enter Your Team Number"),
@@ -329,16 +302,16 @@ def create_main_content():
             margin_bottom="2rem",
         ),
         rx.box(
-            # Flexbox container for header and clock
+            #Header and clock flexbox
             rx.box(
-                create_section_heading(text="Match Schedule"),  # Header aligned left
+                create_section_heading(text="Match Schedule"),
                 rx.text(
-                    State.currentTime,  # Live clock aligned right
+                    State.currentTime,
                     font_size="1.25rem",
                     color="gray.500",
                 ),
                 display="flex",
-                justify_content="space-between",  # Distribute header and clock
+                justify_content="space-between",  #Distribute
                 align_items="center",
                 margin_bottom="0.5rem",
             ),
@@ -376,7 +349,6 @@ def create_main_content():
 
 
 def create_page_layout():
-    """Create the overall page layout including header, main content, and footer."""
     return rx.box(
         rx.box(
             create_header(),
@@ -392,7 +364,7 @@ def create_page_layout():
                 line_height="1.25rem",
             ),
             rx.text(
-                "© 2024 Atri Dey",
+                "© 2024 Atri Dey", #At least I hope that's how copyright works
                 color="#9CA3AF",
                 font_size="0.875rem",
                 line_height="1.25rem",
@@ -406,9 +378,8 @@ def create_page_layout():
         min_height="100vh",
     )
 
-
 def index():
-    """Render the complete VEX Robotics Competition Scheduler page."""
+    #Final render
     return rx.fragment(
         rx.script(src="https://cdn.tailwindcss.com"),
         rx.el.style("""
